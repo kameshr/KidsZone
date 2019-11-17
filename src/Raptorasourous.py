@@ -21,10 +21,22 @@
 print("Hello User")
 print("Welcome to my program")
 print("Have lots of fun")
-print("This program is for addition because it is the first time I am programming")
-print("Give me any number of numbers to add")
-numbers=input().split()
-sum_numbers=0
-for number in numbers:
-   sum_numbers=sum_numbers + int(number)
-print("Answer is " + str(sum_numbers))
+print("This program is for addition and multiplication of numbers because it is the first time I am programming")
+print("Please choose the operation you'd like to do today:\n(a) Addition (b) Multiplication")
+choice = input("Please type 'a' or 'b': ")
+if choice == "a" or choice == "A":
+	print("Give me any number of numbers to add:")
+	numbers = input().split()
+	sum_numbers = 0
+	for number in numbers:
+	   sum_numbers = sum_numbers + int(number)
+	print("Answer is " + str(sum_numbers))
+elif choice == "b" or choice == "B":
+	print("Give me any number of numbers to multiply:")
+	numbers = input().split()
+	prod_numbers = 1
+	for number in numbers:
+	   prod_numbers = prod_numbers * int(number)
+	print("Answer is " + str(prod_numbers))
+else:
+	print("[ERROR] Invalid choice. Please select 'a' or 'b' only.\n")
