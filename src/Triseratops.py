@@ -16,27 +16,21 @@
 # under the License.
 
 # File: Raptarosorous
-# Description: Monu's first program :-)
+# Description: Monu's second program :-)
 
-print("Hello User")
-print("Welcome to my program")
-print("Have lots of fun")
-print("This program is for addition and multiplication of numbers because it is the first time I am programming")
-print("Please choose the operation you'd like to do today:\n(a) Addition (b) Multiplication")
+print("Hello User!")
+print("Welcome to my second program.")
+print("This is for Division and Subtraction of only two number.")
+print("Have lots of fun.")
+print("Please choose the operation you'd like to do today:\n(a) Subtraction (b) Divsion")
 choice = input("Please type 'a' or 'b': ")
 if choice == "a" or choice == "A":
-	print("Give me any number of numbers to add:")
+	print("Give me any two numbers to subtract:")
 	numbers = input().split()
-	sum_numbers = float(0)
-	for number in numbers:
-	   sum_numbers = sum_numbers + float(number)
-	print("Answer is " + str(sum_numbers))
+	print("Answer is " + str(float(numbers[0]) - float(numbers[1])))
 elif choice == "b" or choice == "B":
-	print("Give me any number of numbers to multiply:")
+	print("Give me any two numbers to divide:")
 	numbers = input().split()
-	prod_numbers = float(1)
-	for number in numbers:
-	   prod_numbers = prod_numbers * float(number)
-	print("Answer is " + str(prod_numbers))
+	print("Answer is " + str(float(numbers[0]) / float(numbers[1])))
 else:
 	print("[ERROR] Invalid choice. Please select 'a' or 'b' only.\n")
