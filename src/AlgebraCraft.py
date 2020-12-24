@@ -19,6 +19,8 @@ from termcolor import colored
 import os
 from fractions import Fraction
 
+superscript = str.maketrans("0123456789", "\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079")
+
 # Function to unwind and exit
 def exitCraft():
 	print(colored("Thank you for using AlgebraCraft.", 'cyan', attrs=['bold']))
@@ -56,8 +58,8 @@ def sumsq(cmd_args):
 		return 0
 	ans1 = pow((chk_args[0] + chk_args[1]), 2)
 	ans2 = pow(chk_args[0], 2) + 2*chk_args[0]*chk_args[1] + pow(chk_args[1], 2)
-	print("(a + b)ˆ2 value is " + str(ans1))
-	print("aˆ2 + 2*a*b + bˆ2 value is " + str(ans2))
+	print("(a + b)2 value is ".translate(superscript) + str(ans1))
+	print("a2 + ".translate(superscript) + "2*a*b + " + "b2 value is ".translate(superscript) + str(ans2))
 	return 0
 
 # Function to calculate square of sum of two numbers
@@ -67,8 +69,8 @@ def subsq(cmd_args):
 		return 0
 	ans1 = pow(chk_args[0] - chk_args[1], 2)
 	ans2 = pow(chk_args[0], 2) - 2*chk_args[0]*chk_args[1] + pow(chk_args[1], 2)
-	print("(a - b)ˆ2 value is " + str(ans1))
-	print("aˆ2 - 2*a*b + bˆ2 value is " + str(ans2))
+	print("(a - b)2 value is ".translate(superscript) + str(ans1))
+	print("a2 - ".translate(superscript) + "2*a*b + " + "b2 value is ".translate(superscript) + str(ans2))
 	return 0
 
 # Function to calculate cube of sum of two numbers
@@ -78,8 +80,8 @@ def sumcb(cmd_args):
 		return 0
 	ans1 = pow(chk_args[0] + chk_args[1], 3)
 	ans2 = pow(chk_args[0], 3) + 3*pow(chk_args[0], 2)*chk_args[1] + 3*chk_args[0]*pow(chk_args[1], 2) +  pow(chk_args[1], 3)
-	print("(a + b)ˆ3 value is " + str(ans1))
-	print("aˆ3 + 3*aˆ2*b + 3*a*bˆ2 + bˆ3 value is " + str(ans2))
+	print("(a + b)3 value is ".translate(superscript) + str(ans1))
+	print("a3 + ".translate(superscript) + "3*" + "a2*b + ".translate(superscript) + "3*a*" + "b2 + b3 value is ".translate(superscript) + str(ans2))
 	return 0
 
 # Function to calculate cube of difference of two numbers
@@ -89,9 +91,36 @@ def subcb(cmd_args):
 		return 0
 	ans1 = pow(chk_args[0] - chk_args[1], 3)
 	ans2 = pow(chk_args[0], 3) - 3*pow(chk_args[0], 2)*chk_args[1] + 3*chk_args[0]*pow(chk_args[1], 2) -  pow(chk_args[1], 3)
-	print("(a - b)ˆ3 value is " + str(ans1))
-	print("aˆ3 - 3*aˆ2*b + 3*a*bˆ2 - bˆ3 value is " + str(ans2))
+	print("(a - b)3 value is ".translate(superscript) + str(ans1))
+	print("a3 - ".translate(superscript) + "3*" + "a2*b + ".translate(superscript) + "3*a*" + "b2 - b3 value is ".translate(superscript) + str(ans2))
 	return 0
+
+# Function to calculate binomial expansion
+def binom(cmd_args):
+	chk_args = checknum(cmd_args)
+	power = 0
+	try:
+		power = int(cmd_args[3])
+	except:
+		print(colored("[ERROR]", 'red', attrs=['reverse', 'bold']) + colored(" Power should be an integer.", 'red', attrs=['bold']))
+		printhelp()
+		return -1
+	
+	formula = ""
+	value = 0
+	coeff = int(0)
+
+	for i in range(power, -1, -1):
+		if i == power:
+			coeff = 1
+			formula = ("a" + str(i)).translate(superscript)
+			value = coeff*pow(chk_args[0], i)
+		else:
+			coeff = int(coeff*(i + 1)/(power - i))
+			formula = formula + " + " + str(coeff) + ("a" + str(i) + "b" + str(power - i)).translate(superscript)
+			value = value + coeff*pow(chk_args[0], i)*pow(chk_args[1], power - i)
+	print("(a + b)" + str(power).translate(superscript) + " = " + formula)
+	print("Therefore, (" + str(chk_args[0]) + " + " + str(chk_args[1]) + ")" + str(power).translate(superscript) + " = " + str(value))
 
 # Function implementing the command prompt
 def cmdprompt():
@@ -124,6 +153,10 @@ def cmdprompt():
 
 		elif cmd_args[0] == "subcb":
 			subcb(cmd_args)
+			continue
+
+		elif cmd_args[0] == "binom":
+			binom(cmd_args)
 			continue
 
 		else:
