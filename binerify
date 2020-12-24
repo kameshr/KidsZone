@@ -1,0 +1,87 @@
+#!/usr/bin/python3
+
+import sys
+
+NUMCOLOR = "\033[1;90;40m"
+PRIMECOLOR = "\033[1;94;40m"
+POWERCOLOR = "\033[1;92;40m"
+POWERSYM = "\033[1;33;40m"
+LOSECOLOR = "\033[0m"
+ERRORCOLOR = "\033[1;31;40m"
+
+try:
+	cmd = str(sys.argv[1])
+except:
+	print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+	sys.exit()
+
+if cmd == "engtobin":
+	try:
+		string = str(sys.argv[2])
+	except:
+		print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+		sys.exit()
+	binstring = ""
+	for c in string:
+		letter = bin(ord(c))
+		if len(letter) == 8:
+			binstring = binstring + "0" + letter[2:]
+			sys.stdout.write("0" + letter[2:])
+		else:
+			binstring = binstring + letter[2:]
+			sys.stdout.write(letter[2:])
+	print("")
+
+if cmd == "engtohex":
+	try:
+		string = str(sys.argv[2])
+	except:
+		print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+		sys.exit()
+	for c in string:
+		letter = hex(ord(c))
+		sys.stdout.write(letter[2:])
+	print("")
+
+
+if cmd == "bintoeng":
+	try:
+		binary = str(sys.argv[2])
+	except:
+		print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+		sys.exit()
+
+	length = len(binary)
+
+	num = 0
+	while num < length:
+		try:
+			letter = int(binary[num:num+7], 2)
+		except:
+			print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+			sys.exit()
+		sys.stdout.write(chr(letter))
+		letter = ''
+		num = num + 7
+	print("")
+
+if cmd == "hextoeng":
+	try:
+		hexa = str(sys.argv[2])
+	except:
+		print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+		sys.exit()
+
+	length = len(hexa)
+
+	num = 0
+	while num < length:
+		try:
+			letter = int(hexa[num:num+2], 16)
+		except:
+			print(ERRORCOLOR + "[ERROR] Wrong command chosen.\n" + LOSECOLOR + "Usage: binerify tobin <String to convert to ASCII binary code.> | toeng <ASCII binary code to convert to Engligh characters>.\n")
+			sys.exit()
+		sys.stdout.write(chr(letter))
+		letter = ''
+		num = num + 2
+	print("")
