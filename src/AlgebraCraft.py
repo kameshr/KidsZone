@@ -28,7 +28,7 @@ def exitCraft():
 
 # Print basic help message
 def printhelp():
-	print(colored("[INFO]", 'yellow', attrs=['reverse', 'bold']) + colored("Commands: sumsq <two numbers>, subsq <two numbers>, sumcb <two numbers>, subcb <two numbers>, exit", 'yellow'))
+	print(colored("[INFO]", 'yellow', attrs=['reverse', 'bold']) + colored("Commands: binom <two numbers> <positive integer power>, sumsq <two numbers>, subsq <two numbers>, sumcb <two numbers>, subcb <two numbers>, exit", 'yellow'))
 
 # Function to verify command prompt argument numbers
 def checknum(cmd_args):
@@ -102,25 +102,45 @@ def binom(cmd_args):
 	try:
 		power = int(cmd_args[3])
 	except:
-		print(colored("[ERROR]", 'red', attrs=['reverse', 'bold']) + colored(" Power should be an integer.", 'red', attrs=['bold']))
+		print(colored("[ERROR]", 'red', attrs=['reverse', 'blink']) + colored(" Power should be a positive integer.", 'red', attrs=['bold']))
 		printhelp()
 		return -1
 	
-	formula = ""
-	value = 0
-	coeff = int(0)
+	if power <= 0:
+		print(colored("[ERROR]", 'red', attrs=['reverse', 'blink']) + colored(" Power should be a positive integer.", 'red', attrs=['bold']))
+		printhelp()
+		return -1
+	
+	var_color = 'magenta'
+	pow_color = 'green'
+	op_color = 'yellow'
+	coeff_color = 'white'
+	value_color = 'white'
+	
+	coeff = int(1)
+	formula = colored("a", var_color) + colored(str(power).translate(superscript), pow_color)
+	value = pow(chk_args[0], power)
 
-	for i in range(power, -1, -1):
-		if i == power:
-			coeff = 1
-			formula = ("a" + str(i)).translate(superscript)
-			value = coeff*pow(chk_args[0], i)
-		else:
-			coeff = int(coeff*(i + 1)/(power - i))
-			formula = formula + " + " + str(coeff) + ("a" + str(i) + "b" + str(power - i)).translate(superscript)
-			value = value + coeff*pow(chk_args[0], i)*pow(chk_args[1], power - i)
-	print("(a + b)" + str(power).translate(superscript) + " = " + formula)
-	print("Therefore, (" + str(chk_args[0]) + " + " + str(chk_args[1]) + ")" + str(power).translate(superscript) + " = " + str(value))
+	for i in range(power - 1, -1, -1):
+		coeff = int(coeff*(i + 1)/(power - i))
+
+		formula = formula + colored(" + ", op_color)
+		if coeff != 1:
+			formula = formula + colored(str(coeff), coeff_color)
+		
+		if i == 1:
+			formula = formula + colored("a", var_color)
+		elif i > 1:
+			formula = formula + colored("a", var_color) + colored(str(i).translate(superscript), pow_color)
+		
+		if power - i == 1:
+			formula = formula + colored("b", var_color)
+		elif power - i > 1:
+			formula = formula + colored("b", var_color) + colored(str(power - i).translate(superscript), pow_color)
+
+		value = value + coeff*pow(chk_args[0], i)*pow(chk_args[1], power - i)
+	print(colored("(", op_color) + colored("a", var_color) + colored(" + ", op_color) + colored("b", var_color) + colored(")", op_color) + colored(str(power).translate(superscript), pow_color) + colored(" = ", op_color) + formula)
+	print(colored("Therefore, (", op_color) + colored(str(chk_args[0]), var_color) + colored(" + ", op_color) + colored(str(chk_args[1]), var_color) + colored(")", op_color) + colored(str(power).translate(superscript), pow_color) + colored(" = ", op_color) + colored(str(value), value_color))
 
 # Function implementing the command prompt
 def cmdprompt():
