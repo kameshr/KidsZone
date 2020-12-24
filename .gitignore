@@ -3,8 +3,8 @@ __pycache__/
 *$py.class
 
 # SQLite3 Databases
-.*db
-*db
+src/.*db
+src/*db
 
 # C extensions
 *.so
