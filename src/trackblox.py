@@ -42,19 +42,24 @@ def setup(LOG):
 
 # Extract all roblox IDs to be tracked
 def getIDs(LOG):
+	rids =[]
 	conn = sqlite3.connect(LOG)
 	c = conn.cursor()
 	uids = c.execute("SELECT userid from roblox")
+	for uid in uids:
+		rids.append(int(uid[0]))
 	conn.close()
-	return uids
+	return rids
 
 # Extract authentication secrets
 def getAuth(LOG):
 	conn = sqlite3.connect(LOG)
 	c = conn.cursor()
 	rows = c.execute("SELECT userid, username, rbxid, roblosecurity FROM roblox WHERE rbxid IS NOT NULL LIMIT 1")
+	for row in rows:
+		auth = row
 	conn.close()
-	return rows
+	return auth
 
 # Daemon monitoring Roblox activity
 def trackDaemon(LOG):
@@ -70,10 +75,9 @@ def trackDaemon(LOG):
 # Live update tracked IDs and authentication info required
 			for uid in getIDs(LOG):
 				if int(uid) not in IDs.keys():
-					IDs[int(uids[0])] = [0, '']
+					IDs[uid] = [0, '']
 			if auth == []:
-				for row in getAuth(LOG):
-					auth = row
+				auth = getAuth(LOG)
 
 # For each tracking ID track the status of the users
 			for rid in IDs.keys():
@@ -90,7 +94,10 @@ def trackDaemon(LOG):
 					ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 					conn = sqlite3.connect(LOG)
 					c = conn.cursor()
-					result = c.execute("INSERT INTO logblox VALUES('" + str(rid) + "', '" + str(user['Username']) + "', '" + str(js['GameId']) + "', '" + str(js['LastLocation'].replace("Playing ", "")) + "', '" + ts + "', 'Online', '0', '" + str(location[int(js['LocationType'])]) + "', '" + str(js['PlaceId']) + "', '" + str(presence[int(js['PresenceType'])]) + "')")
+					print(js['LastLocation'])
+					print(js['LastLocation'].replace("Playing", ""))
+					print(js['LastLocation'].replace("Playing", "").strip())
+					result = c.execute("INSERT INTO logblox VALUES('" + str(rid) + "', '" + user['Username'] + "', '" + str(js['GameId']) + "', '" + str(js['LastLocation'].replace("Playing", "").strip()) + "', '" + ts + "', 'Online', '0', '" + str(location[int(js['LocationType'])]) + "', '" + str(js['PlaceId']) + "', '" + str(presence[int(js['PresenceType'])]) + "')")
 					conn.commit()
 					conn.close()
 				
@@ -102,7 +109,7 @@ def trackDaemon(LOG):
 					c = conn.cursor()
 					result = c.execute("UPDATE logblox SET endtime = '" + ts + "' WHERE userid = '" + str(rid) + "' and gameid = '" + str(IDs[rid][1]) + "' and endtime = 'Online'")
 					result = c.execute("UPDATE logblox SET time =  strftime('%s', endtime) - strftime('%s', starttime) WHERE userid = '" + str(rid) + "' and gameid = '" + str(IDs[rid][1]) + "' and time = 0")
-					result = c.execute("INSERT INTO logblox VALUES('" + str(rid) + "', '" + str(user['Username']) + "', '" + str(js['GameId']) + "', '" + str(js['LastLocation'].replace("Playing ", "")) + "', '" + ts + "', 'Online', '0', '" + str(location[int(js['LocationType'])]) + "', '" + str(js['PlaceId']) + "', '" + str(presence[int(js['PresenceType'])]) + "')")
+					result = c.execute("INSERT INTO logblox VALUES('" + str(rid) + "', '" + user['Username'] + "', '" + str(js['GameId']) + "', '" + str(js['LastLocation'].replace("Playing", "").strip()) + "', '" + ts + "', 'Online', '0', '" + str(location[int(js['LocationType'])]) + "', '" + str(js['PlaceId']) + "', '" + str(presence[int(js['PresenceType'])]) + "')")
 					IDs[rid][1] = js['GameId']
 					conn.commit()
 					conn.close()
